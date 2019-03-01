@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block contnent %}
+ <div class="col-12 tm-block-col">
+            <h2 class="tm-block-title">Users</h2>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>Twitter Account</td>
+                    <td>Number of Tweets</td>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for info in tweetsInformation[:10] %}
+                    <tr class="analyseTable">
+                        <td><a style="text-decoration:none; color:#fff" href="{{url_for('usersAccountsandTweetsresult')}}?info={{info[1]}}">{{info[1]}}</a></td>
+                         <td>{{info[0]}} </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+                <form action="{{url_for('retriveAllAccountInDashboard')}}" method="POST">
+               <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block text-uppercase">Refresh</button>
+               </div>
+           </form>
+        </div>
+{% endblock %}

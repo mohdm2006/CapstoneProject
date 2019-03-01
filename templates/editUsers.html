@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block contnent %}
+        <div class="col-12 tm-block-col">
+                               <div class="container" align="center">
+           <form action="{{url_for('retriveAccount')}}" method="POST">
+               <div class="form-group">
+                   <label> First Name </label>
+                   <input type="text" class="form-control" placeholder="Enter First Name" name="firstName">
+                   <button type="submit" class="btn btn-primary btn-block text-uppercase">Submit</button>
+               </div>
+           </form>
+       </div>
+
+        <div class="col-12 tm-block-col">
+            <h2 class="tm-block-title">Users</h2>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>user ID</td>
+                    <td>User Name</td>
+                    <td>First Name</td>
+                    <td>Last Name</td>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for user in users[:10] %}
+                    <tr class="analyseTable">
+
+                        <td><a style="text-decoration:none; color:#fff" href="{{url_for('moreUserDetails')}}?UserID={{user[0]}}">{{user[0]}}</a></td>
+                        <td>{{user[1]}} </td>
+                        <td>{{user[4]}}</td>
+                        <td>{{user[5]}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+                <form action="{{url_for('retriveAllAccount')}}" method="POST">
+               <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block text-uppercase">Refresh</button>
+               </div>
+           </form>
+        </div>
+    </div>
+{% endblock %}

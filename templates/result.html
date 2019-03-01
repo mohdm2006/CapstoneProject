@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block contnent %}
+{% block AccountAndName %}
+<!--<div>-->
+    <!--{% if Accounts is not none %}-->
+    <!--<p>{{Account}}</p>-->
+    <!--{% else  %}-->
+    <!--<p>Choose an account</p>-->
+    <!--{% endif %}-->
+<!--</div>-->
+<!--<div>-->
+    <!--<p>{{Name}}</p>-->
+<!--</div>-->
+<!--{% endblock %}-->
+<div class="col-12 tm-block-col">
+                <form action="{{url_for('searchtext')}}" method="post" class="tm-login-form">
+        <!--<h2 class="tm-block-title">Enter the first name</h2>-->
+        <input
+                name="search"
+                type="text"
+                class="form-control validate"
+                id="search"
+                value=""
+                required
+                placeholder="Enter a key word"
+        >
+         <button type="submit" class="btn btn-primary btn-block text-uppercase">Search</button>
+                </form>
+</div>
+<div class="col-12 tm-block-col">
+    <div class="tm-bg-primary-dark tm-block tm-block-taller tm-block-scroll">
+        <h2 class="tm-block-title">Orders List</h2>
+            <div class="form-group mt-3">
+                <!--<form action="{{url_for('searchtext')}}" method="post" class="tm-login-form">-->
+        <!--<label for="keyword" style="color: #1d2124">Enter a keyword</label>-->
+        <!--<input-->
+                <!--name="search"-->
+                <!--type="text"-->
+                <!--class="form-control validate"-->
+                <!--id="search"-->
+                <!--value=""-->
+                <!--required>-->
+         <!--<button type="submit" class="btn btn-primary btn-block text-uppercase">Search</button>-->
+                <!--</form>-->
+        <table class="table">
+            <thead>
+            <tr>
+                <td>date</td>
+                <td>Text</td>
+                <td>category</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                {% for text in texts[:10] %}
+            <tr>
+                <td>{{text[0]}} </td>
+                <td>{{text[1]}}</td>
+                <td>{{text[2]}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<form action="{{url_for('Dowanload')}}" method="POST">
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block text-uppercase" style="margin-outside: 10px">Download All result </button>
+    </div>
+</form>
+{% endblock %}

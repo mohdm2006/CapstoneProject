@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block contnent %}
+
+{% if usertype == 'Admin' %}
+ <div class="col-12 tm-block-col">
+            <h2 class="tm-block-title">Users</h2>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>user ID</td>
+                    <td>User Name</td>
+                    <td>First Name</td>
+                    <td>Last Name</td>
+                    <td>number of the dataset</td>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for user in users[:10] %}
+                    <tr class="analyseTable">
+                        <td><a style="text-decoration:none; color:#fff" href="{{url_for('usersAccountsandTweets')}}?UserID={{user[0]}}">{{user[0]}}</a></td>
+                        <td>{{user[1]}} </td>
+                        <td>{{user[2]}}</td>
+                        <td>{{user[3]}}</td>
+                        <td>{{user[4]}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+                <form action="{{url_for('retriveAllAccountInDashboard')}}" method="POST">
+               <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block text-uppercase">Refresh</button>
+               </div>
+           </form>
+        </div>
+
+{% else %}
+
+{% if data and data2 is defined %}
+<div id="donutchart" style="width: 800px; height: 500px;margin-left: 25%"></div>
+<div id="top_x_div" style="width: 400px; height: 400px; margin-left: 20%"></div>
+</div>
+<script type="text/javascript">
+      google.charts.load('current', {'packages':['bar']});
+      google.charts.setOnLoadCallback(drawStuff);
+      function drawStuff() {
+        var data = new google.visualization.arrayToDataTable([
+          ['Move', 'number'],
+          ['{{data2[0][0]}}', {{data2[0][1]}}],
+          ['{{data2[1][0]}}', {{data2[1][1]}}],
+          ['{{data2[2][0]}}', {{data2[2][1]}}],
+          ['{{data2[3][0]}}', {{data2[3][1]}}],
+          ['{{data2[4][0]}}', {{data2[4][1]}}],
+            ['{{data2[5][0]}}', {{data2[5][1]}}],
+            ['{{data2[6][0]}}', {{data2[6][1]}}],
+            ['{{data2[7][0]}}', {{data2[7][1]}}],
+            ['{{data2[8][0]}}', {{data2[8][1]}}],
+            ['{{data2[9][0]}}', {{data2[9][1]}}]
+        ]);
+
+        var options = {
+             backgroundColor: { fill: "#4E657A" },
+          width: 800,
+          legend: { position: 'none' },
+          // chart: {
+          //
+          // },
+                 annotations: {
+                textStyle: {
+                  fontName: 'Times-Roman',
+                  fontSize: 18,
+                  bold: true,
+                  italic: true,
+                  // The color of the text.
+                  color: '#878506',
+                  // The color of the text outline.
+                  auraColor: '#0000',
+                  // The transparency of the text.
+                  opacity: 0.8
+                }
+              },
+
+          axes: {
+            x: {
+              0: { side: 'top', label: 'Most common words for {{Account}}'} // Top x-axis.
+            }
+          },
+          bar: { groupWidth: "90%" }
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('top_x_div'));
+        // Convert the Classic options to Material options.
+        chart.draw(data, google.charts.Bar.convertOptions(options));
+      };
+    </script>
+
+
+ <script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+         ['None', {{data[0][0]}}],
+          ['Bug', {{data[1][0]}}],
+          ['U', {{data[2][0]}}],
+          ['F', {{data[3][0]}}],
+        ]);
+
+        var options = {
+          title: 'Tweets categroy',
+             backgroundColor: { fill: "#4E657A" },
+          pieHole: 0.4,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+        chart.draw(data, options);
+      }
+    </script>
+
+{% else %}
+<p class="name" style="margin-left: 10px; margin-top: 20px"> Welcome back, {{Name}}</p>
+{% endif %}
+
+
+{% endif %}
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block contnent %}
+{% block AccountAndName %}
+    <!--<div>-->
+        <!--{% if Account is not none %}-->
+            <!--<p>{{Account}}</p>-->
+            <!--{% else  %}-->
+            <!--<p>Choose an account</p>-->
+        <!--{% endif %}-->
+    <!--</div>-->
+<!--<div>-->
+    <!--<p>{{Name}}</p>-->
+<!--</div>-->
+<!--{% endblock %}-->
+<!--<div class="container" align="center">-->
+    <!--<form action="{{url_for('newAccount')}}" method="POST">-->
+        <!--<div class="form-group">-->
+            <!--<label>Mention</label>-->
+            <!--<input type="text" class="form-control" placeholder="Enter the account" name="twitterAccount">-->
+            <!--<button type="submit" class="btn btn-default">Submit</button>-->
+        <!--</div>-->
+    <!--</form>-->
+<!--</div>-->
+<div class="container tm-mt-big tm-mb-big">
+    <div class="row">
+        <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
+            <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="tm-block-title d-inline-block" style="text-align:center;">Choose an account</h2>
+                    </div>
+                </div>
+                <div class="row tm-edit-product-row">
+                    <div class="col-xl-6 col-lg-6 col-md-6">
+                        <form action="{{url_for('chooseAccount')}}" class="tm-edit-product-form"  method="POST">
+                            <div class="form-group mb-3">
+                                <label
+                                        for="category"
+                                >Account</label>
+                                <select name="choosenAccount"
+                                        class="custom-select tm-select-accounts"
+                                        id="category">
+                                    {% for account in Accounts %}
+                                    <option > {{account[0]}} </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="row">
+                            </div>
+                            <!--<div class="col-12">-->
+                        <button type="submit" class="btn btn-primary btn-block text-uppercase">set as main Account</button>
+                    <!--</div>-->
+                    </form>
+                    </div>
+
+                    <div class="col-xl-6 col-lg-6 col-md-6 mx-auto mb-4">
+                    <form action="{{url_for('newAccount')}}" method="POST">
+                        <div class="form-group  mb-3" style="position: relative">
+                            <label>Add Account</label>
+                            <input type="text" class="form-control" placeholder="Enter the account" name="twitterAccount">
+                            <button title="Add New Account"  type="submit" style="position:absolute;cursor:pointer; border: none; background: grey;height: 50px;width:50px;bottom:0px;right:0px"><i style="color:#f5a623;;font-size:20px" class="fas fa-plus-square"></i>
+                            </button>
+                        </div>
+                    </form>
+                    </div>
+                    <!--<div class="col-12">-->
+                        <!--<button type="submit" class="btn btn-primary btn-block text-uppercase">set as main Account</button>-->
+                    <!--</div>-->
+                    <!--</form>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

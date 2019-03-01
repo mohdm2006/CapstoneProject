@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block contnent %}
+<div class="col-12 mx-auto tm-login-col" xmlns="http://www.w3.org/1999/html">
+    <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="tm-block-title mb-4">User Information</h2>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-12">
+                <form action="{{url_for('updateUser')}}" method="post" class="tm-login-form">
+                    <div class="form-group">
+                        <h2 class="tm-block-title"> user ID:</h2>
+                        <input
+                                name="userID"
+                                type="text"
+                                class="form-control validate"
+                                id="userID"
+                                value={{UserInformation[0][0]}}
+                                required
+                                readonly
+                                style="background: #54657D"
+                        >
+                    </div>
+                    <div class="form-group mt-3">
+                        <h2 class="tm-block-title"> Username:</h2>
+                        <input
+                                name="username"
+                                type="text"
+                                class="form-control validate"
+                                id="username"
+                                value={{UserInformation[0][1]}}
+                                style="background: #54657D"
+                                readonly
+                                required
+                        >
+                    </div>
+                     <div class="form-group mt-3">
+                         <h2 class="tm-block-title"> User Type:</h2>
+                         <input
+                                name="usertype"
+                                type="text"
+                                class="form-control validate"
+                                id="usertype"
+                                value={{UserInformation[0][3]}}
+                                required
+                                readonly
+                                style="background: #54657D"
+                        >
+                    </div>
+                    <div class="form-group mt-3">
+                        <h2 class="tm-block-title"> First Name</h2>
+                        <input
+                                name="firstName"
+                                type="text"
+                                class="form-control validate"
+                                id="firstName"
+                                value={{UserInformation[0][4]}}
+                                required
+                                >
+                    </div>
+                    <div class="form-group mt-3">
+                        <h2 class="tm-block-title"> Last Name</h2>
+                        <input
+                                name="lastName"
+                                type="text"
+                                class="form-control validate"
+                                id="lastName"
+                                value={{UserInformation[0][5]}}
+                                required
+                        >
+                    </div>
+                    <div class="form-group mt-4">
+                        <button
+                                type="submit"
+                                class="btn btn-primary btn-block text-uppercase"
+                        >
+                            Update changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+{% endblock contnent %}
