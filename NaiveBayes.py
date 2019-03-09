@@ -13,6 +13,7 @@ from sklearn.utils import shuffle
 data = pd.read_csv('FinalDataset.csv')
 data.dropna(inplace = True)
 data["text"]= data["text"].str.split(",", n=1, expand=True)
+pd.set_option('display.max_colwidth', -1)
 trainDF = pd.DataFrame()
 trainDF['text'] = data["text"]
 trainDF['label'] = data["category"]
@@ -29,14 +30,12 @@ x_train, x_test, y_train, y_test = train_test_split(x,y , test_size=0.30)
 
 # ---------------------- Naivebyes Algorithm ------------------------ :
 def performNaive():
-	x_train, x_test, y_train, y_test = train_test_split(x,y , test_size=0.30)
 	NBClasssifier = naive_bayes.MultinomialNB()
-	NBClasssifier.fit(x_train, y_train)
+	NBClasssifier.fit(x,y)
 	accuracy = accuracy_score(y_test, NBClasssifier.predict(x_test)) * 100
 	conf = confusion_matrix(y_test, NBClasssifier.predict(x_test))
 	report = classification_report(y_test, NBClasssifier.predict(x_test))
-	print(report)
-	print(accuracy)
+	print('Naive bayes algorithm accuracy : '+ str(accuracy))
 	return NBClasssifier, [x_train,y_test,vectorizer]
 
 # -------------------- predicting a tweets for naive bayes ---------------- :
@@ -48,13 +47,10 @@ def predictingATweet(ATweets):
 	doc = vectorizer.transform([ATweets])
 	prediction = NP.predict(doc)
 	print(prediction)
-	# p = NP.predict_proba()
 
 # --------------------- KNN algorithm ------------------------------------- :
-
 def KNeighborsAlgorithm():
-	KNN_List = [ ]
-	print( "------------- Testing K-Neighbors Classifier With Different K Values -----------------" )
+	KNN_List = []
 	for i in [ 1, 2, 3, 4, 5]:
 		print( "Testing KNN with k= " + str( i ) + ":" )
 		KNN = KNeighborsClassifier( n_neighbors = i )
@@ -63,26 +59,19 @@ def KNeighborsAlgorithm():
 		conf = confusion_matrix( y_test, KNN.predict( x_test ) )
 		accuracy = accuracy_score( y_test, KNN.predict( x_test ) ) * 100
 		print('Accuracy = %.3f' % accuracy + "%" )
-		print("Confusion Matrix for KNN with k= " + str( i ) + ":" )
-		for l in range( 0, len( conf ) ):
-			s = [' {0} '.format( elem ) for elem in conf[ l ] ]
-			print('{:>12}  {:>12}'.format( KNN.classes_[ l ], str( s ) ) )
-		print( "Classification report for KNN with k= " + str( i ) + ":" )
-		print('knn', classification_report( y_test, KNN.predict( x_test ) ) )
 	return KNN_List
 
-# ---------------------------- Decsion Tree ------------------------ :
+# ---------------------------- Decision Tree ------------------------ :
 def DecsionTree():
 	DT = tree.DecisionTreeClassifier()
 	DT.fit(x,y)
 	accuracy = accuracy_score(y_test, DT.predict(x_test)) * 100
-	# print('DT accuracy',accuracy)
+	print('Decision tree algorithm accuracy : ' + str(accuracy))
 	report = classification_report(y_test, DT.predict(x_test))
-	#print('DT report', report)
-	# print(vectorizer.vocabulary_)
-	# doc = vectorizer.transform(["@miabrownex @snapchatsupport odd felx but ok x"])
-	# print('The prediction :',DT.predict(doc))
 	return DT
 
 # ------------------ Results of the algorithms ----------------------- :
-print(vectorizer.vocabulary_)
+# print(vectorizer.vocabulary_)
+# DecsionTree()
+# KNeighborsAlgorithm()
+# performNaive()

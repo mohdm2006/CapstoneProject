@@ -13,7 +13,7 @@
 <!--</div>-->
 <!--{% endblock %}-->
 <div class="col-12 tm-block-col">
-                <form action="{{url_for('searchtext')}}" method="post" class="tm-login-form">
+                <form id="searchForm" action="{{url_for('searchtext')}}" method="post" class="tm-login-form">
         <!--<h2 class="tm-block-title">Enter the first name</h2>-->
         <input
                 name="search"
@@ -24,12 +24,20 @@
                 required
                 placeholder="Enter a key word"
         >
-         <button type="submit" class="btn btn-primary btn-block text-uppercase">Search</button>
+         <button type="submit"  class="btn btn-primary btn-block text-uppercase">Search</button>
                 </form>
 </div>
+
+<form action="{{url_for('Refresh')}}" method="POST">
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block text-uppercase" style="margin-outside: 10px; width: 1080px ; margin-left: 15px">Refresh</button>
+    </div>
+</form>
+
+
 <div class="col-12 tm-block-col">
     <div class="tm-bg-primary-dark tm-block tm-block-taller tm-block-scroll">
-        <h2 class="tm-block-title">Orders List</h2>
+        <h2 class="tm-block-title" style=" text-align: center">Categorized tweets</h2>
             <div class="form-group mt-3">
                 <!--<form action="{{url_for('searchtext')}}" method="post" class="tm-login-form">-->
         <!--<label for="keyword" style="color: #1d2124">Enter a keyword</label>-->
@@ -42,17 +50,49 @@
                 <!--required>-->
          <!--<button type="submit" class="btn btn-primary btn-block text-uppercase">Search</button>-->
                 <!--</form>-->
-        <table class="table">
+                <script>
+                    var t = {{texts}} ;
+                    if(t && (t.length === 0)){alert("There is no results !"); window.history.back()};
+
+                </script>
+        <table id="resultTable" class="table">
+            <!--<script>-->
+                 <!--var resultObject = [];-->
+            <!--</script>-->
+                <!--{% for text in texts %}-->
+                <!--<script>-->
+                   <!--// let myData = {};-->
+                   <!--// myData.date =  `{{text[0]}}` ;-->
+                   <!--// myData.text =  `{{text[1]}}` ;-->
+                   <!--// myData.category =  `{{text[2]}}`;-->
+                   <!--resultObject.push({date: `{{text[0]}}`, text: `{{text[1]}}`,category: `{{text[2]}}` });-->
+                <!--</script>-->
+                <!--{% endfor %}-->
+            <!--<script>-->
+                <!--renderResultTable(resultObject);-->
+                <!--function renderResultTable(t){-->
+        <!--console.log(t);-->
+        <!--for(let txt of t){-->
+            <!--let tr = '<tr>';-->
+                <!--tr+='<td>'+txt.date + '</td>';-->
+                <!--tr+= '<td>'+txt.text +'</td>';-->
+                <!--tr+='<td>'+txt.category+'</td>';-->
+            <!--tr+= '</tr>';-->
+            <!--console.log(tr);-->
+            <!--$('#resultTable').append(tr);-->
+    <!--}}-->
+            <!--</script>-->
             <thead>
             <tr>
-                <td>date</td>
+                <td>Date</td>
                 <td>Text</td>
-                <td>category</td>
+                <td>Category</td>
             </tr>
             </thead>
             <tbody>
             <tr>
                 {% for text in texts[:10] %}
+
             <tr>
                 <td>{{text[0]}} </td>
                 <td>{{text[1]}}</td>
@@ -60,9 +100,11 @@
             </tr>
             {% endfor %}
             </tbody>
+
         </table>
     </div>
 </div>
+
 
 <form action="{{url_for('Dowanload')}}" method="POST">
     <div class="form-group">

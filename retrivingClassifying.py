@@ -35,14 +35,19 @@ def clssifingNewTweets(screen_name,userID):
     for count in range(len(NewTweets)):
         # cleanText = noEmojis(NewTweets[count][2])
         cleanText = re.sub(r"http\S+", "", noEmojis(NewTweets[count][2]))
+        # changing the text to the numbers in order to find its category based on the build model.
         OneTweetText = NaiveBayes.vectorizer.transform([cleanText])
+        # saving the category
         category = prediction.predict(OneTweetText)
+        # checking if the tweets are exist in the database or. if not then it will be added.
         if not tweets_has_users.checkingtweetsAndUserID(userID, NewTweets[count][1]):
             contnent = [NewTweets[count][0], NewTweets[count][1], str(cleanText), transforming(category),screen_name, combineID ]
+            # inserting into tweets table
             tweetsTable.postintoTweets(contnent)
+            # inserting into associative table between the user and tweets table.
             tweets_has_users.postingIntotweets_has_users(contnent,screen_name,userID,newCloneID,CloneTime, combineID)
 
-
+#checking for begist cloneID
 def chckingForCloneID():
     query = ("select max(cloneID) from tweets_has_users ;")
     bigestCloneID = Mysql.fetch(query)
@@ -50,7 +55,7 @@ def chckingForCloneID():
         return 1
     else:
         return bigestCloneID[0][0]+1
-
+#checking for the begist CombinID
 def chckingForCombinID():
     query = ("select max(combinID) from tweets ;")
     bigestCombinID = Mysql.fetch(query)
@@ -82,6 +87,3 @@ def noEmojis(text):
             returnString += ''
     return returnString
 
-# This method return the new tweets only:
-# def printR():
-#     print("hello")

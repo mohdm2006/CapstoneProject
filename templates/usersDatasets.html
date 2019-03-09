@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block contnent %}
+<div class="col-12 tm-block-col">
+            <h2 class="tm-block-title">Users</h2>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>user ID</td>
+                    <td>User Name</td>
+                    <td>First Name</td>
+                    <td>Last Name</td>
+                    <td>number of the dataset</td>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for user in users[:10] %}
+                    <tr class="analyseTable">
+                        <td><a style="text-decoration:none; color:#fff" href="{{url_for('usersAccountsandTweets')}}?UserID={{user[0]}}">{{user[0]}}</a></td>
+                        <td>{{user[1]}} </td>
+                        <td>{{user[2]}}</td>
+                        <td>{{user[3]}}</td>
+                        <td>{{user[4]}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+                <form action="{{url_for('retriveAllAccountInDashboard')}}" method="POST">
+               <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block text-uppercase">Refresh</button>
+               </div>
+           </form>
+        </div>
+{% endblock %}

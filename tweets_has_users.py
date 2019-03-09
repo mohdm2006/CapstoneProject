@@ -15,12 +15,14 @@ def fetchingFromtweets_has_users(userID, choosenAccount):
     result = Mysql.fetch(query)
     return result
 
+# retrieving the tags from database for a specific user
 def fetchingAccounts(userID):
     keyword = str(userID)
     query = "select distinct(tweets_twitterAccount) from tweets_has_users where userID = " + keyword + ";"
     result = Mysql.fetch(query)
     return result
 
+# check if the tweet is exist based on the userID and tweetID.
 def checkingtweetsAndUserID(userID, tweetID):
     if int(userID):
         query = "select * from tweets_has_users where tweets_tweetsID = " + str(tweetID) + " and userID = " + str(userID) + " ;"
@@ -36,7 +38,7 @@ def fetchingTweet(CloneID):
     result = Mysql.fetch(query)
     return result
 
-# This function retrives the tweets inforamtion for a user
+# This function retrives the tweets information for a user
 def UserTweetsInformation(userID):
     query = "select count(tweets_tweetsID), tweets_twitterAccount from tweets_has_users where userid = "+ str(userID) + " group by tweets_twitterAccount;"
     return Mysql.fetch(query)

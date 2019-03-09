@@ -1,115 +1,76 @@
 {% extends 'base.html' %}
 {% block contnent %}
-
-{% if usertype == 'Admin' %}
- <div class="col-12 tm-block-col">
-            <h2 class="tm-block-title">Users</h2>
-            <table class="table">
-                <thead>
-                <tr>
-                    <td>user ID</td>
-                    <td>User Name</td>
-                    <td>First Name</td>
-                    <td>Last Name</td>
-                    <td>number of the dataset</td>
-                </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        {% for user in users[:10] %}
-                    <tr class="analyseTable">
-                        <td><a style="text-decoration:none; color:#fff" href="{{url_for('usersAccountsandTweets')}}?UserID={{user[0]}}">{{user[0]}}</a></td>
-                        <td>{{user[1]}} </td>
-                        <td>{{user[2]}}</td>
-                        <td>{{user[3]}}</td>
-                        <td>{{user[4]}}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-                <form action="{{url_for('retriveAllAccountInDashboard')}}" method="POST">
-               <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-block text-uppercase">Refresh</button>
-               </div>
-           </form>
-        </div>
-
-{% else %}
-
 {% if data and data2 is defined %}
-<div id="donutchart" style="width: 800px; height: 500px;margin-left: 25%"></div>
-<div id="top_x_div" style="width: 400px; height: 400px; margin-left: 20%"></div>
+<div class="row" >
+<div class = "col-6" id="donutchart" style="border-right: 1px solid gray"></div>
+<div class = "col-6" id="columnchart_values" style="border-left: 1px solid gray"></div>
+</div>
 </div>
 <script type="text/javascript">
-      google.charts.load('current', {'packages':['bar']});
-      google.charts.setOnLoadCallback(drawStuff);
-      function drawStuff() {
-        var data = new google.visualization.arrayToDataTable([
-          ['Move', 'number'],
-          ['{{data2[0][0]}}', {{data2[0][1]}}],
-          ['{{data2[1][0]}}', {{data2[1][1]}}],
-          ['{{data2[2][0]}}', {{data2[2][1]}}],
-          ['{{data2[3][0]}}', {{data2[3][1]}}],
-          ['{{data2[4][0]}}', {{data2[4][1]}}],
-            ['{{data2[5][0]}}', {{data2[5][1]}}],
-            ['{{data2[6][0]}}', {{data2[6][1]}}],
-            ['{{data2[7][0]}}', {{data2[7][1]}}],
-            ['{{data2[8][0]}}', {{data2[8][1]}}],
-            ['{{data2[9][0]}}', {{data2[9][1]}}]
-        ]);
+    console.log('hello world');
+    google.charts.load("current", {packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+      let header = ['word', 'number', { role: 'style' }];
+      let drawArray = [];
+      drawArray.push(header);
+      ///var values = new array();
+      // console.log('dddd');
+      // console.log({{data2|tojson}});
+      //
+      let dataArray = {{data2|tojson}};
 
-        var options = {
-             backgroundColor: { fill: "#4E657A" },
-          width: 800,
-          legend: { position: 'none' },
-          // chart: {
-          //
-          // },
-                 annotations: {
-                textStyle: {
-                  fontName: 'Times-Roman',
-                  fontSize: 18,
-                  bold: true,
-                  italic: true,
-                  // The color of the text.
-                  color: '#878506',
-                  // The color of the text outline.
-                  auraColor: '#0000',
-                  // The transparency of the text.
-                  opacity: 0.8
-                }
-              },
+      let x = 10;
+      if(dataArray.length < x){
+          x = dataArray.length;
+      }
 
-          axes: {
-            x: {
-              0: { side: 'top', label: 'Most common words for {{Account}}'} // Top x-axis.
-            }
-          },
-          bar: { groupWidth: "90%" }
-        };
+      for(let i=0; i<x; i++){
+          let data = [dataArray[i][0], dataArray[i][1], 'gray']
+          drawArray.push(data);
+      }
+      console.log(drawArray);
+      var data = google.visualization.arrayToDataTable(
+          drawArray
+      );
+      var view = new google.visualization.DataView(data);
+      view.setColumns([0, 1,
+                       { calc: "stringify",
+                         sourceColumn: 1,
+                         type: "string",
+                         role: "annotation" },
+                       2]);
 
-        var chart = new google.charts.Bar(document.getElementById('top_x_div'));
-        // Convert the Classic options to Material options.
-        chart.draw(data, google.charts.Bar.convertOptions(options));
+      var options = {
+        backgroundColor: "#fff",
+        title: "Terms frequency",
+        width: 600,
+        height: 400,
+        bar: {groupWidth: "50%", color: 'red'},
+        legend: { position: "none" },
       };
-    </script>
-
+      var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
+      chart.draw(view, options);
+  }
+  </script>
 
  <script type="text/javascript">
+
       google.charts.load("current", {packages:["corechart"]});
       google.charts.setOnLoadCallback(drawChart);
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Task', 'Hours per Day'],
-         ['None', {{data[0][0]}}],
-          ['Bug', {{data[1][0]}}],
-          ['U', {{data[2][0]}}],
-          ['F', {{data[3][0]}}],
+         ['Bug', {{data[0][0]}}],
+          ['F', {{data[1][0]}}],
+          ['None', {{data[2][0]}}],
+          ['U', {{data[3][0]}}],
         ]);
 
         var options = {
           title: 'Tweets categroy',
-             backgroundColor: { fill: "#4E657A" },
+             backgroundColor: { fill: "#fff" },
+            width: 700,
           pieHole: 0.4,
         };
 
@@ -119,9 +80,9 @@
     </script>
 
 {% else %}
-<p class="name" style="margin-left: 10px; margin-top: 20px"> Welcome back, {{Name}}</p>
-{% endif %}
-
-
+ <div class="container" style="margin-left: 1px; margin-top: 70px" >
+     <p class="name" style="margin-left: 400px "> There is no data to be analyzed </p>
+     <p class="name" style="margin-left: 455px; margin-top: 20px"> Enter a twitter tag</p>
+     </div>
 {% endif %}
 {% endblock %}

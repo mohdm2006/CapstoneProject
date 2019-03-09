@@ -202,13 +202,23 @@ button:focus {
   font-size: 90%;
 }
 .table {
-  background-color: #50697f;
+  background-color: #999999;
   color: #fff;
   font-size: 85%;
   margin-bottom: 0;
 }
+.table tbody tr a{
+  color: #fff;
+}
+
+.table tbody tr:hover {
+  /*color: #a0c0de;*/
+  background: #fff;
+  color: #000000;
+}
+
 thead {
-  background-color: #486177;
+  background-color: #999999;
   color: #fff;
 }
 .table thead th {
@@ -278,7 +288,7 @@ thead {
   padding-right: 15px;
 }
 .form-control {
-  background-color: #54657d;
+  background-color: #999999;
   color: #fff;
   border: 0;
 }
@@ -324,6 +334,7 @@ thead {
   padding: 19px 18px;
   border-radius: 0;
   height: 50px;
+
 }
 .form-group {
   margin-bottom: 15px;
@@ -369,12 +380,15 @@ thead {
 }
 .table-hover tbody tr {
   transition: all 0.2s ease;
+
 }
 .table-hover tbody tr:hover {
-  color: #a0c0de;
+  /*color: #a0c0de;*/
+  background: #fff;
+  color: #000000;
 }
 .tm-bg-primary-dark {
-  background-color: #435c70;
+  background-color: #565656;
 }
 .tm-bg-gray {
   background-color: rgba(0, 0, 0, 0.05);
@@ -466,7 +480,7 @@ input[type="checkbox"]:focus {
 .custom-select {
   width: 100%;
   border: none;
-  color: #acc6de;
+  color: #ffffff;
   height: 50px;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -479,7 +493,7 @@ input[type="checkbox"]:focus {
   -o-border-radius: 0;
   border-radius: 0;
   padding: 15px;
-  background: url(../img/arrow-down.png) 98% no-repeat #50657b;
+  background: #999999 ; //url(../img/arrow-down.png) 98% no-repeat #50657b;
 }
 .custom-select:focus {
   outline: 0;

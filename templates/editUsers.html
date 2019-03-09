@@ -1,18 +1,28 @@
 {% extends 'base.html' %}
 {% block contnent %}
+
+<script>
+    let val = '{{verification}}'.toLowerCase();
+    $('#loader').attr('hidden', val);
+    if(val == 'false'){
+        alert('user already exist');
+    }
+</script>
+
         <div class="col-12 tm-block-col">
                                <div class="container" align="center">
            <form action="{{url_for('retriveAccount')}}" method="POST">
                <div class="form-group">
-                   <label> First Name </label>
+                   <!--<label> First Name </label>-->
+                   <h1 class="tm-block-title" style="text-align: center">First Name</h1>
                    <input type="text" class="form-control" placeholder="Enter First Name" name="firstName">
                    <button type="submit" class="btn btn-primary btn-block text-uppercase">Submit</button>
                </div>
            </form>
        </div>
 
-        <div class="col-12 tm-block-col">
-            <h2 class="tm-block-title">Users</h2>
+        <div class="col-12 tm-block-col" style="margin-top: 3px">
+            <h2 class="tm-block-title" style="text-align: center">Users</h2>
             <table class="table">
                 <thead>
                 <tr>
@@ -24,7 +34,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        {% for user in users[:10] %}
+                        {% for user in users %}
                     <tr class="analyseTable">
 
                         <td><a style="text-decoration:none; color:#fff" href="{{url_for('moreUserDetails')}}?UserID={{user[0]}}">{{user[0]}}</a></td>
@@ -40,6 +50,25 @@
                     <button type="submit" class="btn btn-primary btn-block text-uppercase">Refresh</button>
                </div>
            </form>
+
+            <div class="col-13 tm-block-col" style="max-height: 1500px; height: 700px">
+                <div style="min-height:150px; height:550px; max-height:550px" class="tm-bg-primary-dark tm-block tm-block-taller tm-block-scroll">
+                   <h2 class="tm-block-title" style="text-align: center">Searching Options</h2>
+                    <hr style=" border: 1px solid gray">
+                    <form action="{{url_for('AddingUsers')}}" method="POST">
+                        <div class="form-group mb-3">
+                        <input type="text" class="form-control" placeholder="User Name" name="userName" style="margin-top: 10px" required>
+                        <input type="text" class="form-control" placeholder="First Name" name="firstName" style="margin-top: 10px" required>
+                        <input type="text" class="form-control" placeholder="Last Name" name="lastName" style="margin-top: 10px" required>
+                        <input type="password" class="form-control" placeholder="password" name="password" style="margin-top: 10px" required>
+                        <input type="email" class="form-control" placeholder="Email " name="email" style="margin-top: 10px" required>
+                        </div>
+                        <input class="btn btn-primary btn-block text-uppercase" type="submit" value="Search">
+                    </form>
+                </div>
+                </div>
+
+            <div class="col-6 d-lg-table-row">
         </div>
     </div>
 {% endblock %}

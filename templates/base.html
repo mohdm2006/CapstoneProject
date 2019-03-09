@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 
 <html lang="en">
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -20,24 +19,48 @@
 	https://templatemo.com/tm-524-product-admin
 	-->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="static/js/jquery-3.3.1.min.js"></script>
     <!-- https://getbootstrap.com/ -->
     <style>
         .name{
             font-family: 'Oswald', sans-serif;
             font-size: 24px;
             font-weight: 700;
-            color: #ffffff;
+            color: #565656;
         }
         .analyseTable:hover{
             cursor:pointer;
             background:#4E657A
         }
     </style>
+    <style>
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
 </head>
-<body id="reportsPage" >
-    <div class="" id="home">
-        <nav class="navbar navbar-expand-xl">
-            <div class="container h-100">
+<body id="reportsPage" style="background: #ffffff ">
+    <div class="" id="home" >
+        <nav class="navbar navbar-expand-xl" style="background: #565656 ">
+            <div class="container h-100" >
                 <!--<a class="navbar-brand" href="index.html">-->
                     <h1 class="tm-site-title mb-0">Tweets Analysis</h1>
                 <!--</a>-->
@@ -50,21 +73,23 @@
                     <ul class="navbar-nav mx-auto h-100">
 
                         <li class="nav-item">
-                            <a class="nav-link " href="{{'/dashboard'}}">
-                                <i class="fas fa-tachometer-alt"></i>
+                            <a class="nav-link" href="{{'/dashboard'}}">
+                                <i class="fas fa-th"></i>
                                 Dashboard
                                 <span class="sr-only">(current)</span>
                             </a>
                         </li>
+                        {% if Account is not none %}
                         <li class="nav-item">
                             <a class="nav-link" href={{'/analyzing'}}>
-                                <i class="far fa-user"></i>
+                                <i class="fas fa-microscope"></i>
                                 Analyzing
                             </a>
                         </li>
+                        {% endif %}
                         <li class="nav-item">
                             <a class="nav-link" href={{'/accounts'}}>
-                                <i class="far fa-user"></i>
+                                <i class="fa fa-at"></i>
                                 Tags
                             </a>
                         </li>
@@ -80,14 +105,20 @@
                         {% if usertype == 'Admin' %}
                          <li class="nav-item">
                             <a class="nav-link " href="{{'/Users'}}">
-                                <i class="fas fa-tachometer-alt"></i>
+                                <i class="far fa-user"></i>
                                 Users
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="{{'/Dataset'}}">
+                                <i class="far fa-user"></i>
+                                Datasets
                             </a>
                         </li>
                         {% endif %}
                          <li class="nav-item">
                             <a class="nav-link " href="{{'/logout'}}">
-                                <i class="fas fa-tachometer-alt"></i>
+                                <i class="fas fa-sign-out-alt"></i>
                                 log Out
                             </a>
                         </li>
@@ -95,37 +126,34 @@
                 </div>
                 {% endblock %}
             </div>
-
         </nav>
         {% block header %}
-        <div class="container">
+        <div class="container" >
+            <!--<div>-->
+            <!--<p class="name" style="margin-left: 10px; margin-top: 20px"> {{Name}}</p>-->
+        <!--</div>-->
+            {% if usertype == 'Admin' %}
+                <p class="name" style="margin-left: 10px; margin-top: 20px"> Welcome Admin</p>
+                <p class="name" style="margin-left: 10px"> You are using {{Account}} account</p>
+
+            {% else %}
             <div>
-            <p class="name" style="margin-left: 10px; margin-top: 20px"> Welcome back, {{Name}}</p>
-        </div>
-                <div>
-                     {% if Accounts is not none %}
-                          <p class="name" style="margin-left: 10px"> You are using {{Account}} account</p>
-                    {% else  %}
-                         <p>Choose an account</p>
-                    {% endif %}
-                </div>
+                {% if Accounts is not none %}
+                <p class="name" style="margin-left: 10px; margin-top: 20px">Welcome back, {{Name}}</p>
+                    <p class="name" style="margin-left: 10px"> You are using {{Account}} account</p>
+                    {% else %}
+                    <p>Choose an account</p>
+            {% endif %}
+            </div>
+                {% endif %}
+                     <hr style=" border: 1px solid gray">
+                {% endblock %}
+        {% block contnent %}
             {% endblock %}
 
-        {% block contnent %}
-        {% endblock %}
-
         </div>
-            <!-- Table -->
-        <footer class="tm-footer row tm-mt-small">
-            <div class="col-12 font-weight-light">
-                <p class="text-center text-white mb-0 px-4 small">
-                    Copyright &copy; <b>2018</b> All rights reserved.
-                    Design: <a rel="nofollow noopener" href="https://templatemo.com" class="tm-footer-link">Template Mo</a>
-                </p>
-            </div>
-        </footer>
     </div>
-    <script src="static/js/jquery-3.3.1.min.js"></script>
+    <!--<script src="static/js/jquery-3.3.1.min.js"></script>-->
     <!-- https://jquery.com/download/ -->
     <script src="static/js/moment.min.js"></script>
     <!-- https://momentjs.com/ -->
@@ -135,6 +163,11 @@
     <!-- https://getbootstrap.com/ -->
     <script src="static/js/tooplate-scripts.js"></script>
     <script>
+        $('tr').hover(function(){
+           $(this).find('a').css("color","black");
+        }, function(){
+           $(this).find('a').css("color","white");
+        });
         $('tr').click(function(){
            window.location = $(this).find('a').attr('href');
         });
@@ -164,6 +197,45 @@
             });
         })
     </script>
+
+    <script>
+                        $('#addAccountForm').submit(function(e){
+                            $('#loader').attr('hidden', false);
+                            setTimeout(()=> {$('#loader').attr('hidden', true);} ,5000);
+
+                            let value = $('#addAccountText').val();
+                            if(value === ''){
+                                e.preventDefault();
+                                alert('You should provide a value');
+                                return;
+                            }
+                        });
+
+                        $('#defaultAccountButton').click(function(){
+                            if( !$('#category').val() ) {
+                               $('#defaultAccountForm').submit(function(e){
+                                   e.preventDefault();
+                                   alert('Add account to set an account');
+                                   return;
+                               });
+                           }
+                        });
+                        $('#searchForm').submit(function(e){
+                            let value = $('#search').val();
+                            if(value === ''){
+                                e.preventDefault();
+                                alert('You should provide a value');
+                                return;
+                            }
+                        });
+
+
+
+    </script>
+<script>
+
+
+</script>
 </body>
 
 </html>

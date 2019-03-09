@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
 {% block contnent %}
 <div class="row">
-<div class="col-12 tm-block-col" style="height: 300px" >
+<div class="col-6 tm-block-col" style="min-height:150px; height:450px; max-height:450px" >
 
-    <div class="tm-bg-primary-dark tm-block tm-block-taller tm-block-scroll">
+    <div class="tm-bg-primary-dark tm-block tm-block-taller tm-block-scroll" >
 
         {% if assoiateTable is none %}
         <p>There is no result </p>
         {% else %}
-        <h2 class="tm-block-title">Cloning History</h2>
+        <h2 class="tm-block-title" style="text-align: center">Twitter retrieving History</h2>
+        <hr style=" border: 1px solid gray">
         <table class="table" id="analyseTable">
             <thead>
             <tr>
@@ -22,7 +23,7 @@
             <!--<tr>-->
                 {% for row in assoiateTable %}
                 <tr class="analyseTable">
-                        <td><a style="text-decoration:none; color:#fff" href="{{url_for('result')}}?cloneID={{row[1]}}">
+                        <td><a style="text-decoration:none;" href="{{url_for('result')}}?cloneID={{row[1]}}">
                             {{row[0]}}</a></td>
                         <td>{{row[1]}}</td>
                         <td>{{row[2]}}</td>
@@ -40,22 +41,26 @@
             <!--<button type="submit" class="btn btn-primary btn-block text-uppercase">Retrive More</button>-->
         <!--</div>-->
         <!--</form>-->
-    </div>
-            <form action="{{url_for('retriveMore')}}" method="POST">
+        <form style="margin-top:30px" action="{{url_for('retriveMore')}}" method="POST">
         <div class="form-group">
             <button type="submit" class="btn btn-primary btn-block text-uppercase" style="margin-outside: 10px">Retrive More From twitter</button>
         </div>
         </form>
+    </div>
+
 </div>
-    <div class="col-12 tm-block-col" style="margin-top: 100px" >
+    <div class="col-6 tm-block-col" >
         <div class="row" >
-                <div class="col-6 d-lg-table-row">
-                <div style="min-height:150px; height:300px; max-height:150px" class="tm-bg-primary-dark tm-block tm-block-taller tm-block-scroll">
+            <div class="col-12 d-lg-table-row">
+
+                <div style="min-height:150px; height:450px; max-height:450px" class="tm-bg-primary-dark tm-block tm-block-taller tm-block-scroll">
+                   <h2 class="tm-block-title" style="text-align: center">Searching Options</h2>
+                    <hr style=" border: 1px solid gray">
                     <form action="{{url_for('retriveBasedOnDate')}}" method="POST">
-                        <input style="margin-bottom: 5px ;border-radius: 2px ; width: 45% ; margin-left: 5%" type="date" name="startDate">
-                        <input style="margin-bottom: 5px ;border-radius: 2px ; width: 45%" type="date" name="endDate">
+                        <label style="color: seashell">Form</label><input style="margin-bottom: 5px ;border-radius: 2px ; width: 30% ; margin-left: 5%" type="date" name="startDate">
+                        <label style="color: seashell" >To</label><input style="margin-bottom: 5px ;border-radius: 2px ; width: 30%; margin-left: 7%" type="date" name="endDate">
                         <div class="form-group mb-3">
-                                <label for="category"
+                                <label for="category" style="margin-top: 10px"
                                  >Choose Category</label>
                                 <select name="categroyName"
                                         class="custom-select tm-select-accounts"
@@ -69,17 +74,23 @@
                             </div>
                         <input class="btn btn-primary btn-block text-uppercase" type="submit" value="Search">
                     </form>
-                </div>
-                </div>
-
-            <div class="col-6 d-lg-table-row">
-                <div style="min-height:150px; height:150px; max-height:150px" class="tm-bg-primary-dark tm-block tm-block-taller tm-block-scroll">
-                <form action="{{url_for('retriveAlltweets')}}" method="POST">
+                    <form action="{{url_for('retriveAlltweets')}}" method="POST">
                 <div class="form-group">
                         <button style="margin-top: 30px"type="submit" class="btn btn-primary btn-block text-uppercase">All saved tweets</button>
                 </div>
                 </form>
+
                 </div>
+                </div>
+
+            <div class="col-6 d-lg-table-row">
+                <!--<div style="min-height:150px; height:150px; max-height:150px" class="tm-bg-primary-dark tm-block tm-block-taller tm-block-scroll">-->
+                <!--<form action="{{url_for('retriveAlltweets')}}" method="POST">-->
+                <!--<div class="form-group">-->
+                        <!--<button style="margin-top: 30px"type="submit" class="btn btn-primary btn-block text-uppercase">All saved tweets</button>-->
+                <!--</div>-->
+                <!--</form>-->
+                <!--</div>-->
             </div>
         </div>
     </div>
