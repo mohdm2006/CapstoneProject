@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
 {% block contnent %}
+<script>
+    let val = '{{validartion}}'.toLowerCase();
+    if(val == 'true'){
+        alert('Enter a date');
+    }
+</script>
 <div class="row">
 <div class="col-6 tm-block-col" style="min-height:150px; height:450px; max-height:450px" >
 

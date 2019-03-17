@@ -1,6 +1,6 @@
 import os
 import tweets_has_users
-import retrivingClassifying as DataRetrival
+import classifyingRetrievedTweets as DataRetrival
 import usersTable
 import tweetsTable
 from flask import Flask, render_template, request, redirect, session, flash, send_file
@@ -9,6 +9,7 @@ import StringIO
 from flask import Flask, stream_with_context
 from werkzeug.datastructures import Headers
 from werkzeug.wrappers import Response
+
 
 
 app = Flask(__name__)
@@ -20,7 +21,7 @@ def dex():
 def dashboard():
     return render_template("dashboard.html", Account = session['defualtAccount'], Name = session['Name'], usertype=session['Usertype'], data = session['statstic'], data2 = session['statstic2'], users = session['allUsers'])
 
-
+# The dataset for All users
 @app.route('/Dataset', methods=['POST','GET'])
 def Dataset():
     if session['Usertype'] == 'Admin':
@@ -32,7 +33,7 @@ def Dataset():
                                usertype=session['Usertype'], data=session['statstic'], data2=session['statstic2'],
                                users=session['allUsers'])
 
-
+# Log in
 @app.route('/login', methods=['POST','GET'])
 def login():
     # checking if the form is empty or not.
@@ -50,26 +51,28 @@ def login():
             session['LName'] = userRow[5]
             session['email'] = userRow[6]
             session['Accounts'] = tweets_has_users.fetchingAccounts(session['userID'])
-            print("session[''] ", session)
+
             # checking if the password is correct or not.
-            if userRow[2] == request.form['password']:
+            if userRow[2] == usersTable.hashingPassword(request.form['password']):
                 # saving the statistics into the session
                 session['allUsers'] = usersTable.usersDashboard()
-                session['statstic'] = tweetsTable.retrivingStatstic(session['defualtAccount'])
-                session['statstic2'] = tweetsTable.termFrequency(session['defualtAccount'],session['userID'])
-                print(session['statstic'])
-                print(session['statstic2'])
+                session['statstic'] = tweetsTable.retrivingStatstic(session['defualtAccount'], session['userID'])
+                session['statstic2'] = tweetsTable.termFrequency(session['defualtAccount'], session['userID'])
+
                 # sending the important session data to the dashboard page.
-                print("Account ",session['defualtAccount'])
                 return render_template('dashboard.html', Name=session['Name'], Account=session['defualtAccount'], usertype=session['Usertype'], data= session['statstic'], data2 = session['statstic2'],users = session['allUsers'])
 
             # if the password is wrong, the session will be cleaned and return to the login page.
             else:
+                validation = True
                 session.clear()
-                return render_template('login.html', wrongUsername='wrong username or password')
+                return render_template('login.html', validation=validation)
+
         # if the username is wrong return to the login page
         else:
-            return render_template('login.html',wrongUsername='wrong username or password')
+            validation = True
+            session.clear()
+            return render_template('login.html',validation=validation)
     else:
         return render_template('login.html')
 
@@ -108,12 +111,16 @@ def newAccount():
         twitterAccount = request.form['twitterAccount']
         # if the form is not null.
         if twitterAccount is not None:
-            # retriving, categoiyzin the new tweets for the added tag
-            DataRetrival.clssifingNewTweets(twitterAccount, session['userID'])
-            # setting the default tag to the new one.
-            usersTable.updatingAccount(session['userID'], session['defualtAccount'])
-            session['Accounts'] = tweets_has_users.fetchingAccounts(session['userID'])
-            return render_template("Accounts.html", Accounts = session['Accounts'], Name = session['Name'],Account=session['defualtAccount'],usertype=session['Usertype'])
+            if tweets_has_users.checkAccount(twitterAccount, session['userID']) == False:
+                # retriving, categoiyzin the new tweets for the added tag
+                DataRetrival.clssifingNewTweets(twitterAccount, session['userID'])
+                # setting the default tag to the new one.
+                usersTable.updatingAccount(session['userID'], session['defualtAccount'])
+                session['Accounts'] = tweets_has_users.fetchingAccounts(session['userID'])
+                return render_template("Accounts.html", Accounts = session['Accounts'], Name = session['Name'],Account=session['defualtAccount'],usertype=session['Usertype'])
+            else:
+                accountAvaliab = tweets_has_users.checkAccount(twitterAccount, session['userID'])
+                return render_template("Accounts.html", Accounts = session['Accounts'], Name = session['Name'],Account=session['defualtAccount'],usertype=session['Usertype'], accountAvaliab= accountAvaliab)
         else:
             return render_template("Accounts.html", Accounts = session['Accounts'],Account=session['defualtAccount'],usertype=session['Usertype'])
     else:
@@ -127,7 +134,7 @@ def chooseAccount():
     # This method update the default tag.
     usersTable.updatingAccount(session['userID'],session['defualtAccount'])
     # retrieving the statistics for the new default tag
-    session['statstic'] = tweetsTable.retrivingStatstic(session['defualtAccount'])
+    session['statstic'] = tweetsTable.retrivingStatstic(session['defualtAccount'],session['userID'])
     session['statstic2'] = tweetsTable.termFrequency(session['defualtAccount'], session['userID'])
     print(session['statstic2'])
     return render_template("Accounts.html", Accounts = session['Accounts'], Name = session['Name'],Account=session['defualtAccount'],usertype=session['Usertype'])
@@ -137,9 +144,23 @@ def chooseAccount():
 def result():
     session['CloneID'] = request.args.get('cloneID')
     texts = tweets_has_users.fetchingTweet(session['CloneID'])
+    x = 0
+    row = []
+    listTexts = []
+    # for x in texts:
+    #     print(x)
+    # changing the date from UTF date to local date
+    # for x in range(len(texts)):
+    #     print('old ', texts[x][0])
+    #     row.append(arrow.get(texts[x][0]).to('local').format('YYYY-MM-DD HH:mm:ss'))
+    #     print('newDate ', arrow.get(texts[x][0]).to('local').format('YYYY-MM-DD HH:mm:ss'))
+    #     row.append(texts)
+    #     row.append(texts[x][1])
+    #     row.append(texts[x][2])
+    #     listTexts.append(row)
+    #     x = x+1
     tweetsTable.wrtitngtweetsToAfile(texts)
     tweetsTable.writingIntoOrignalfile(texts)
-    # tweetsTable.search(texts)
     return render_template('result.html', texts=texts, Name=session['Name'], Account=session['defualtAccount'],usertype=session['Usertype'])
 
 @app.route("/Users")
@@ -173,9 +194,10 @@ def updateUser():
     content.append(request.form['username'])
     content.append(request.form['firstName'])
     content.append(request.form['lastName'])
+    content.append(usersTable.hashingPassword(request.form['Password']))
     content.append(request.form['userID'])
     usersTable.updateuser(content)
-    UserInformation = usersTable.retrvieByUserID(content[3])
+    UserInformation = usersTable.retrvieByUserID(content[4])
     return render_template('editUsers2.html',  Accounts = session['Accounts'], UserInformation = UserInformation, usertype=session['Usertype'])
 
 # This function retrive the data based on the cloneID and the text
@@ -183,7 +205,10 @@ def updateUser():
 def searchtext():
     keyword = request.form['search']
     texts = tweetsTable.searchText(keyword)
-    tweetsTable.wrtitngtweetsToAfile(texts)
+    if texts is not None:
+        tweetsTable.wrtitngtweetsToAfile(texts)
+    else:
+        texts=''
     return render_template('result.html',  Accounts = session['Accounts'], usertype=session['Usertype'], texts=texts)
 
 # This method Do cloning for account
@@ -198,19 +223,21 @@ def retriveMore():
 @app.route('/retriveBasedOnDate', methods=['POST','GET'])
 def retriveBasedOnDate():
     startDate = request.form['startDate']
-    print(startDate)
     endDate = request.form['endDate']
-    print(endDate)
     tweetsType =  request.form['categroyName']
-    print(tweetsType)
-    if tweetsType == 'All':
-        texts = tweetsTable.retriveByDate(session['defualtAccount'],session['userID'], startDate, endDate )
-    else :
-        texts =tweetsTable.retriveByDateAndCate(session['defualtAccount'],session['userID'], startDate, endDate, tweetsType)
-    tweetsTable.wrtitngtweetsToAfile(texts)
-    tweetsTable.writingIntoOrignalfile(texts)
-    return render_template('result.html', texts=texts, Name=session['Name'], Account=session['defualtAccount'],
-                           usertype=session['Usertype'])
+    if len(startDate) == 0 or len(endDate)==0:
+        validartion= True
+        assoiateTable = tweets_has_users.fetchingFromtweets_has_users(session['userID'], session['defualtAccount'])
+        return render_template("analyzing.html", Accounts = session['Accounts'],Account=session['defualtAccount'],usertype=session['Usertype'],assoiateTable = assoiateTable , Name = session['Name'], validartion=validartion)
+    else:
+        if tweetsType == 'All':
+            texts = tweetsTable.retriveByDate(session['defualtAccount'],session['userID'], startDate, endDate )
+        else :
+            texts =tweetsTable.retriveByDateAndCate(session['defualtAccount'],session['userID'], startDate, endDate, tweetsType)
+        tweetsTable.wrtitngtweetsToAfile(texts)
+        tweetsTable.writingIntoOrignalfile(texts)
+        return render_template('result.html', texts=texts, Name=session['Name'], Account=session['defualtAccount'],
+                               usertype=session['Usertype'])
 
 # retriving all tweets based on userID and twitter account
 @app.route('/retriveAlltweets', methods=['POST','GET'])
@@ -304,9 +331,10 @@ def AddingUsers():
     userName = request.form['userName']
     firstName = request.form['firstName']
     lastName = request.form['lastName']
-    password = request.form['password']
+    passwordTemp = request.form['password']
+    password = usersTable.hashingPassword(passwordTemp)
     email = request.form['email']
-    verification = usersTable.addingUsers(userName, firstName, lastName, email, password)
+    verification = usersTable.addingUsers(userName, firstName, lastName, email, usersTable.hashingPassword(password))
     users = usersTable.retriveUsers()
     if verification == True:
         # this means the user added

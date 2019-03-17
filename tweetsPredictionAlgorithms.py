@@ -13,19 +13,19 @@ from sklearn.utils import shuffle
 data = pd.read_csv('FinalDataset.csv')
 data.dropna(inplace = True)
 data["text"]= data["text"].str.split(",", n=1, expand=True)
-pd.set_option('display.max_colwidth', -1)
 trainDF = pd.DataFrame()
 trainDF['text'] = data["text"]
 trainDF['label'] = data["category"]
 shuffling = shuffle(trainDF)
 vectorizer = TfidfVectorizer(sublinear_tf=True, max_df=0.5, min_df=3, stop_words='english', use_idf=True,
 								 token_pattern=u"\w{4,}", lowercase=True)
+
 # the training text
 x = vectorizer.fit_transform(shuffling['text'])
+
 # label training
 y = shuffling['label']
 x_train, x_test, y_train, y_test = train_test_split(x,y , test_size=0.30)
-
 
 
 # ---------------------- Naivebyes Algorithm ------------------------ :

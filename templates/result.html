@@ -51,9 +51,14 @@
          <!--<button type="submit" class="btn btn-primary btn-block text-uppercase">Search</button>-->
                 <!--</form>-->
                 <script>
-                    var t = {{texts}} ;
-                    if(t && (t.length === 0)){alert("There is no results !"); window.history.back()};
-
+                    var t = '{{texts}}' ;
+                    console.log(t.length);
+                    if((t.length == 0))
+                    {
+                        t = null ;
+                        alert("There is no results !");
+                        window.history.back()
+                    };
                 </script>
         <table id="resultTable" class="table">
             <!--<script>-->

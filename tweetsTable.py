@@ -30,7 +30,7 @@ def retriveByDate(account,userID, startDate, endDate):
     account = "'"+ account +"'"
     startDate = "'"+startDate+"'"
     endDate = "'"+ endDate +"'"
-    tweetsBydatesQuery = "select createdAt, text, category from tweets where tweetsID in (select tweets_tweetsID from tweets_has_users where userID = "+ str(userID) +" and tweets_twitterAccount ="+ account +") and createdAt between" + startDate + " and " + endDate
+    tweetsBydatesQuery = "select createdAt, text, category from tweets where combinID in (select tweets_combinID from tweets_has_users where userID = "+ str(userID) +" and tweets_twitterAccount ="+ account +") and createdAt between" + startDate + " and " + endDate
     return Mysql.fetch(tweetsBydatesQuery)
 
 def retriveAlltweets(account,userID):
@@ -39,67 +39,84 @@ def retriveAlltweets(account,userID):
     return Mysql.fetch(retrivingAlltweetsForAccount)
 
 # retriving the statstic for to view it in charts
-def retrivingStatstic(twitterAccount):
+def retrivingStatstic(twitterAccount,userID ):
     if twitterAccount is None:
         return None
     else:
         Allresult = []
         twitterAccount = "'" + twitterAccount + "'"
 
-        retrivingStatisticB = "select count(*), category  from tweets where twitterAccount = "+ twitterAccount + " and  category= 'B' group by category order by category ;"
+        # retrivingStatisticB = "select count(*), category  from tweets where twitterAccount = "+ twitterAccount + " and  category= 'B' group by category order by category ;"
+        retrivingStatisticB = "select count(*), category  from tweets where combinID in (select tweets_combinID from tweets_has_users where tweets_twitterAccount = "+ twitterAccount + " and userID = "+ str(userID)+ ") and category= 'B' group by category order by category ;"
         if len(Mysql.fetch(retrivingStatisticB)) == 0:
             Allresult.append((0,'B'))
         else:
+            print(Mysql.fetch(retrivingStatisticB))
+            print('0',Mysql.fetch(retrivingStatisticB)[0])
             Allresult.append(Mysql.fetch(retrivingStatisticB)[0])
 
-        retrivingStatisticF = "select count(*), category  from tweets where twitterAccount = " + twitterAccount + " and category= 'F' group by category order by category ;"
+        # retrivingStatisticF = "select count(*), category  from tweets where twitterAccount = " + twitterAccount + " and category= 'F' group by category order by category ;"
+        retrivingStatisticF = "select count(*), category  from tweets where combinID in (select tweets_combinID from tweets_has_users where tweets_twitterAccount = "+ twitterAccount + " and userID = "+ str(userID)+ ") and category= 'F' group by category order by category ;"
         if len(Mysql.fetch(retrivingStatisticF)) == 0 :
             Allresult.append((0, 'F'))
         else:
+            print(Mysql.fetch(retrivingStatisticF))
+            print('0',Mysql.fetch(retrivingStatisticF)[0])
             Allresult.append(Mysql.fetch(retrivingStatisticF)[0])
 
-        retrivingStatisticNone = "select count(*), category  from tweets where twitterAccount = " + twitterAccount + " and category= 'None' group by category order by category ;"
+        # retrivingStatisticNone = "select count(*), category  from tweets where twitterAccount = " + twitterAccount + " and category= 'None' group by category order by category ;"
+        retrivingStatisticNone = "select count(*), category  from tweets where combinID in (select tweets_combinID from tweets_has_users where tweets_twitterAccount = "+ twitterAccount + " and userID = "+ str(userID)+ ") and category= 'None' group by category order by category ;"
         if len(Mysql.fetch(retrivingStatisticNone)) == 0:
             Allresult.append((0, 'None'))
         else:
+            print(Mysql.fetch(retrivingStatisticNone))
+            print('0', Mysql.fetch(retrivingStatisticNone)[0])
             Allresult.append(Mysql.fetch(retrivingStatisticNone)[0])
 
-        retrivingStatisticU = "select count(*), category  from tweets where twitterAccount = " + twitterAccount + " and category= 'U' group by category order by category ;"
-        if len(Mysql.fetch(retrivingStatisticNone)) == 0:
+        retrivingStatisticU = "select count(*), category  from tweets where combinID in (select tweets_combinID from tweets_has_users where tweets_twitterAccount = " + twitterAccount + " and userID = " + str(
+            userID) + ") and category= 'U' group by category order by category ;"
+        if len(Mysql.fetch(retrivingStatisticU)) == 0:
             Allresult.append((0, 'U'))
         else:
+            print(len(Mysql.fetch(retrivingStatisticU)))
+            print('0',Mysql.fetch(retrivingStatisticU)[0])
             Allresult.append(Mysql.fetch(retrivingStatisticU)[0])
-
-        return Allresult
+    print(Allresult)
+    return Allresult
 
     # this method find the most common words based on the userID, AccountName.
 def termFrequency(account,userID):
-    if account is None:
-        return None
-    else:
-        vectorizer = TfidfVectorizer(sublinear_tf=True, max_df=0.5, min_df=3, stop_words='english', use_idf=True,
-                                     token_pattern=u"\w{4,}", lowercase=True)
-        account = "'" + account + "'"
-        textForAccountandUser = "select text from tweets where tweetsID in (select tweets_tweetsID from tweets_has_users where userID = "+ str(userID) +" and tweets_twitterAccount ="+ account +")"
-        texts = Mysql.fetch(textForAccountandUser)
-        if len(texts) != 0:
-                container = []
-                for text in texts:
-                    container.append(text[0])
-                X = vectorizer.fit_transform(container)
-                tempVoc = []
-                counter = 0
-                for x in sorted(vectorizer.vocabulary_.items(), reverse=True):
-                    if counter == 10:
-                        break
-                    tempVoc.append(x)
-                    counter = counter +1
-                return tempVoc
+    try:
+        if account is None:
+            return None
         else:
-            print("Thre is no data")
+            vectorizer = TfidfVectorizer(sublinear_tf=True, max_df=0.5, min_df=3, stop_words='english', use_idf=True,
+                                         token_pattern=u"\w{4,}", lowercase=True)
+            account = "'" + account + "'"
+            textForAccountandUser = "select text from tweets where combinID in (select tweets_combinID from tweets_has_users where userID = "+ str(userID) +" and tweets_twitterAccount ="+ account +")"
+            texts = Mysql.fetch(textForAccountandUser)
+            if len(texts) != 0:
+                    container = []
+                    for text in texts:
+                        container.append(text[0])
+                    X = vectorizer.fit_transform(container)
+                    tempVoc = []
+                    counter = 0
+                    for x in sorted(vectorizer.vocabulary_.items(), reverse=True):
+                        if counter == 10:
+                            break
+                        tempVoc.append(x)
+                        counter = counter +1
+                    return tempVoc
+            else:
+                print("Thre is no data")
+    except:
+        print('There is an error')
+        return None
 
 # this method takes all the result into one file in order to download it later.
 def wrtitngtweetsToAfile(text):
+    print('wrtitngtweetsToAfile')
     finalRow = []
     firstrow = []
     firstrow.append('Created_at')
@@ -124,7 +141,7 @@ def retriveByDateAndCate(account,userID, startDate, endDate, category):
     endDate = "'"+ endDate +"'"
     Cat = "'" + changingCategroy(category) + "'"
 
-    tweetsBydatesQuery = "select createdAt, text, category from tweets where tweetsID in (select tweets_tweetsID from tweets_has_users where userID = "+ str(userID) +" and tweets_twitterAccount ="+ account +") and createdAt between" + startDate + " and " + endDate +" and category = " + str(Cat) + "; "
+    tweetsBydatesQuery = "select createdAt, text, category from tweets where combinID in (select tweets_combinID from tweets_has_users where userID = "+ str(userID) +" and tweets_twitterAccount ="+ account +") and createdAt between" + startDate + " and " + endDate +" and category = " + str(Cat) + "; "
     return Mysql.fetch(tweetsBydatesQuery)
 
 # This method change the categories to a characters.
@@ -136,7 +153,7 @@ def changingCategroy(text):
     elif (text == 'Feature request'):
         text = "F"
     elif (text == 'User experience'):
-        text = "User experience"
+        text = "U"
     return text
 #
 # print(retriveByDateAndCate('@snapchatsupport',1, '2019-01-01', '2019-02-28', 'Bug'))
@@ -150,8 +167,10 @@ def searchText(text):
                 if re.search(" "+text+" ", row[1], re.IGNORECASE):
                     resultOfSearch.append(row)
     if len(resultOfSearch) == 0:
+        print('len(resultOfSearch) True')
         return None
     else:
+        print('len(resultOfSearch) else  True')
         wrtitngtweetsToAfile(resultOfSearch)
         return resultOfSearch
 
@@ -202,4 +221,12 @@ def writingTheOrginalFileToresultFile(texts):
 
 # termFrequency('@google',10)
 
-termFrequency('@snapchatsupport',1)
+# termFrequency('@snapchatsupport',1)
+
+# print(retriveByDateAndCate('@snapchatsupport',1,'2019-02-27', '2019-03-06', 'User experience'))
+
+# print(retriveAlltweets('@snapchatsupport',1))
+# retrivingStatisticNone = "select count(*), category  from tweets where combinID in (select tweets_combinID from tweets_has_users where tweets_twitterAccount = '" + account + "' and userID = " + str(
+#     '1') + ") and category= 'None' group by category order by category ;"
+# print(retrivingStatisticNone)
+retrivingStatstic('@snapchatsupport',2 )

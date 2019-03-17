@@ -4,18 +4,12 @@
 {% block header %}
 {% endblock %}
 {% block contnent %}
-<!--{% block AccountAndName %}-->
-<!--<div>-->
-    <!--{% if Accounts is not none %}-->
-    <!--<p>{{Account}}</p>-->
-    <!--{% else  %}-->
-    <!--<p>Choose an account</p>-->
-    <!--{% endif %}-->
-<!--</div>-->
-<!--<div>-->
-    <!--<p>{{Name}}</p>-->
-<!--</div>-->
-<!--{% endblock %}-->
+<script>
+    let val = '{{validation}}'.toLowerCase();
+    if(val == 'true'){
+        alert('Wrong username or password');
+    }
+</script>
 <div class="col-12 mx-auto tm-login-col" style="margin-top: 100px">
     <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
         <div class="row">
@@ -38,7 +32,6 @@
                                 required
                         />
                     </div>
-                    <p>{{wrongUsername}}</p>
                     <div class="form-group mt-3">
                         <label for="password">Password</label>
                         <input
@@ -50,7 +43,6 @@
                                 required
                         />
                     </div>
-                    <p>{{wrongUsername}}</p>
                     <div class="form-group mt-4">
                         <button
                                 type="submit"

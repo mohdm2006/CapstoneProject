@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import tweepy
 import csv
-import Mysql
+import arrow
+from datetime import datetime
+
 
 # Twitter API credentials
 consumer_key = "Kvu7hx11dVWfOS2Bth9Pfa3VR"
@@ -14,18 +16,19 @@ api = tweepy.API(auth)
 
 
 # saving the tweets into CSV file :
-def get_all_tweets(screen_name):
-        search = tweepy.Cursor(api.search, q=screen_name, lang="en", tweet_mode='extended').items(200)
-        with open('%s_tweets.csv' % screen_name, 'w') as f:
-            writer = csv.writer(f)
-            writer.writerow(["created_at", "id", "text", "source"])
-            for tweet in search:
-                at = tweet.created_at
-                id = tweet.id
-                text = noEmojis(tweet.full_text)
-                temp = [at, id, text]
-                writer.writerow(temp)
-        pass
+# def get_all_tweets(screen_name):
+#         search = tweepy.Cursor(api.search, q=screen_name, lang="en", tweet_mode='extended').items(10)
+#         with open('%s_tweets.csv' % screen_name, 'w') as f:
+#             writer = csv.writer(f)
+#             writer.writerow(["created_at", "id", "text", "source"])
+#             for tweet in search:
+#                 at = tweet.created_at
+#                 id = tweet.id
+#                 text = noEmojis(tweet.full_text)
+#                 temp = [at, id, text]
+#                 writer.writerow(temp)
+#                 print(tweepy.cursor)
+#         pass
 
 
 def noEmojis(text):
@@ -48,13 +51,15 @@ def retriveOnly(screen_name):
     search = tweepy.Cursor(api.search, q=screen_name, lang="en",tweet_mode='extended').items(200)
     templist = []
     for tweet in search :
-        at = tweet.created_at
+        at = arrow.get(tweet.created_at).to('local').format('YYYY-MM-DD HH:mm:ss')
+        print(at)
+        print(tweet.created_at)
         id = tweet.id
         text = noEmojis(tweet.full_text)
         templist.append([at, id, text])
     return templist
 
-if __name__ == '__main__':
-    # savingIntoDB("")
 
-    get_all_tweets("@snapchatsupport")
+
+if __name__ == '__main__':
+    hash()

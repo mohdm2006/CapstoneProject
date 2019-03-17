@@ -73,9 +73,20 @@
                         >
                     </div>
                     <div class="form-group mt-3">
-                        <h2 class="tm-block-title"> Last Name</h2>
+                        <h2 class="tm-block-title"> Password</h2>
                         <input
-                                name="lastName"
+                                name="Password"
+                                type="password"
+                                class="form-control validate"
+                                id="Password"
+                                value={{UserInformation[0][2]}}
+                                required
+                        >
+                    </div>
+                    <div class="form-group mt-3">
+                        <h2 class="tm-block-title"> Email</h2>
+                        <input
+                                name="Email"
                                 type="text"
                                 class="form-control validate"
                                 id="email"

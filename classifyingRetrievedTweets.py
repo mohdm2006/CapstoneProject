@@ -1,6 +1,6 @@
-import retriveData
+import RetrivingTweetsFromTwitter
 import Mysql
-import NaiveBayes
+import tweetsPredictionAlgorithms
 import tweetsTable
 import tweets_has_users
 import datetime
@@ -8,12 +8,12 @@ import re
 
 # retriving new tweets:
 def retriveAndclassifying(screen_name):
-    tweets = retriveData.retriveOnly(screen_name)
+    tweets = RetrivingTweetsFromTwitter.retriveOnly(screen_name)
     return tweets
 
 # building the model based on the collected data set:
 def buildingThemodel():
-    DTModel = NaiveBayes.DecsionTree()
+    DTModel = tweetsPredictionAlgorithms.DecsionTree()
     return DTModel
 
 # cloning the new tweets then classify them one by one:
@@ -36,11 +36,12 @@ def clssifingNewTweets(screen_name,userID):
         # cleanText = noEmojis(NewTweets[count][2])
         cleanText = re.sub(r"http\S+", "", noEmojis(NewTweets[count][2]))
         # changing the text to the numbers in order to find its category based on the build model.
-        OneTweetText = NaiveBayes.vectorizer.transform([cleanText])
+        OneTweetText = tweetsPredictionAlgorithms.vectorizer.transform([cleanText])
         # saving the category
         category = prediction.predict(OneTweetText)
         # checking if the tweets are exist in the database or. if not then it will be added.
         if not tweets_has_users.checkingtweetsAndUserID(userID, NewTweets[count][1]):
+            print ('tweetsTime', NewTweets[count][0])
             contnent = [NewTweets[count][0], NewTweets[count][1], str(cleanText), transforming(category),screen_name, combineID ]
             # inserting into tweets table
             tweetsTable.postintoTweets(contnent)

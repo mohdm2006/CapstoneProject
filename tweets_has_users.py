@@ -34,7 +34,8 @@ def checkingtweetsAndUserID(userID, tweetID):
 
 
 def fetchingTweet(CloneID):
-    query = "select createdAt,text, category from tweets where tweetsID in (select tweets_tweetsID from tweets_has_users where cloneID = " + str(CloneID) + " ) ; "
+    query = "select createdAt,text, category from tweets where combinID in (select tweets_combinID from tweets_has_users where cloneID = " + str(
+        CloneID) + " ) ; "
     result = Mysql.fetch(query)
     return result
 
@@ -42,3 +43,15 @@ def fetchingTweet(CloneID):
 def UserTweetsInformation(userID):
     query = "select count(tweets_tweetsID), tweets_twitterAccount from tweets_has_users where userid = "+ str(userID) + " group by tweets_twitterAccount;"
     return Mysql.fetch(query)
+
+
+def checkAccount(Account, userID):
+    query = "select * from tweets_has_users where userID = " + str(userID) + " and tweets_twitterAccount = '"+ Account +"';"
+    print query
+    account = Mysql.fetch(query)
+    print(len(account))
+    if len(account) == 0:
+        return False
+    else:
+       return True
+

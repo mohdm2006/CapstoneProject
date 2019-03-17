@@ -1,4 +1,5 @@
 import Mysql
+import hashlib
 
 def fetchFromUsers(content):
     try:
@@ -49,8 +50,9 @@ def retrvieByUserID(ID) :
         return Mysql.fetch(usersQuery)
 
 def updateuser(content):
-    updateuser = ("update users set username = %s , firstname = %s, lastname= %s where userID = %s")
-    infromation = (content[0], content[1], content[2],content[3])
+    print('content : ', content)
+    updateuser = ("update users set username = %s , firstname = %s, lastname= %s , password = %s  where userID = %s")
+    infromation = (content[0], content[1], content[2], content[3],content[4])
     return (Mysql.post(updateuser, infromation))
 
 def usersDashboard():
@@ -93,3 +95,18 @@ def addingUsers(userName, firstName, lastName, email, password):
         userRow = (infromation[0],infromation[1],infromation[2],infromation[3],infromation[4],infromation[5],infromation[6],infromation[7])
         Mysql.post(insertingIntoUser, userRow)
         return True
+
+# hashing password
+def hashingPassword(password):
+    h = hashlib.md5(password.encode())
+    return h.hexdigest()
+
+
+#updatingPassword
+def updatePassword(password, userID):
+    password = hashingPassword(password)
+    row = (password, userID)
+    updatingUsersAccount = ("UPDATE users set password = %s where userID = %s")
+    Mysql.post(updatingUsersAccount, row)
+
+#updatePassword('123m', 2)
