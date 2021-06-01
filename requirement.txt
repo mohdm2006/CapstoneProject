@@ -21,5 +21,5 @@ six==1.12.0
 sklearn==0.0
 tweepy==3.7.0
 Unidecode==1.0.23
-urllib3==1.24.1
+urllib3==1.26.5
 Werkzeug==0.14.1
